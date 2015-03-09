@@ -2,14 +2,15 @@ import markdown
 
 __author__ = 'weigl'
 
-import json
 import re
 
 import jinja2
-from path import Path
 import click
-import requests
 from path import path
+
+import sys
+sys.path.append("../msml/src")
+
 
 from msml.package import Repository, Package
 import mpr.config
@@ -28,7 +29,6 @@ def html(package):
 
 def url(package):
     return "%s/p/%s.html" % (mpr.config.BASE_PATH, package.name)
-
 
 
 jinja_env.filters['html'] = html
@@ -73,21 +73,21 @@ def do(message):
     click.echo(click.style(">>> ", fg='blue') + message, err=False)
 
 
-def read_directory():
-    return json.load(Path("./packages/directory.json").open())
+# def read_directory():
+# return json.load(Path("./packages/directory.json").open())
 
 
-def download_file(url, filename):
-    response = requests.get(url)
-
-    do("Download %s" % url)
-
-    if response.status_code == 200:
-        with open(filename, 'w') as fp:
-            fp.write(response.content)
-    else:
-        error("%s returned %d" % (url, response.status_code))
-
+# def download_file(url, filename):
+#     response = requests.get(url)
+#
+#     do("Download %s" % url)
+#
+#     if response.status_code == 200:
+#         with open(filename, 'w') as fp:
+#             fp.write(response.content)
+#     else:
+#         error("%s returned %d" % (url, response.status_code))
+#
 
 def get_defaults():
     import mpr.config
@@ -102,12 +102,12 @@ def render_template(tofile, template, **kwargs):
         fp.write(template.render(**k))
 
 
-def download_meta_data():
-    for package in get_all_packages():
-        folder = package.folder
-        folder.makedirs_p()
-        download_file(package.package_url, package.package_file)
-        download_file(package.readme_url, package.readme_file)
+# def download_meta_data():
+#     for package in get_all_packages():
+#         folder = package.folder
+#         folder.makedirs_p()
+#         download_file(package.package_url, package.package_file)
+#         download_file(package.readme_url, package.readme_file)
 
 
 def render_page():
@@ -120,12 +120,12 @@ def render_page():
         print "Found %s in %s" % (p, p.base_path)
 
     template = jinja_env.get_template("index.jinja2")
-    render_template("index.html", template, packages=packages)
+    render_template(mpr.config.OUTPUT_FOLDER / "index.html", template, packages=packages)
 
     package_template = jinja_env.get_template("package.jinja2")
-    path("p").mkdir()
+    (mpr.config.OUTPUT_FOLDER/"p" ).mkdir()
     for package in packages:
-        render_template("p/%s.html" % package.name,
+        render_template(mpr.config.OUTPUT_FOLDER / "p/%s.html" % package.name,
                         package_template,
                         package=package)
 

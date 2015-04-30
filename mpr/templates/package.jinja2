@@ -13,16 +13,16 @@
 {% block fourth %}
     <div class="info">
         <p><span class="key">Maintainer:</span>
-            <a href="mailto:{{ package.information.maintainer.name}}">
-            {{ package.information.maintainer.email}}</a></p>
+            <a href="mailto:{{ package.information.maintainer.email}}">
+            {{ package.information.maintainer.name}}</a></p>
 
         <p><span class="key">Name:</span> {{ package.name }}</p>
 
-        <p><span class="key">Version:</span> {{ packageversion }}</p>
+        <p><span class="key">Version:</span> {{ package.version }}</p>
 
         <p><span class="key">Repository:</span>
-            <a href="{{ package.repository_url }}">
-                {{ package.repository_url }}
+            <a href="{{ package.information.repository.url }}">
+                {{ package.information.repository.url }}
                 <!--<img width="16px" src="{{ package.provider_logo }}"/>--></a>
         </p>
     </div>
@@ -35,7 +35,7 @@
     <p>
         <span class="key">add to repository</span><br>
 
-    <pre>$ murmgr download_package {{ package.repository_url }}
+    <pre>$ murmgr download_package {{ package.information.repository.url }}
             </pre>
 
     </p>

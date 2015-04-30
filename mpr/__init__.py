@@ -15,12 +15,15 @@ sys.path.append("../msml/src")
 from msml.package import Repository, Package
 import mpr.config
 
+
 jinja_env = jinja2.Environment(loader=jinja2.PackageLoader(__name__))
 
 
 def html(package):
     if package.information.documentation.file:
         md = path(package.base_path) / package.information.documentation.file
+        with open(md) as fp:
+            md = fp.read()
         return markdown.markdown(md)
     elif package.information.documentation.content:
         return markdown.markdown(package.information.documentation.content)
@@ -123,7 +126,7 @@ def render_page():
     render_template(mpr.config.OUTPUT_FOLDER / "index.html", template, packages=packages)
 
     package_template = jinja_env.get_template("package.jinja2")
-    (mpr.config.OUTPUT_FOLDER/"p" ).mkdir()
+    (mpr.config.OUTPUT_FOLDER/"p" ).makedirs_p()
     for package in packages:
         render_template(mpr.config.OUTPUT_FOLDER / "p/%s.html" % package.name,
                         package_template,

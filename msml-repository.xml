@@ -4,5 +4,6 @@
     <package>packages/mup-empty</package>
     <package>packages/mup-niftyreg</package>
     <package>../msml/share/</package>
+    <package>../mediassist.mupmedkinfu/</package>
 
 </repository>
